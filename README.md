@@ -6,8 +6,3 @@ Clone this repository, then
 cd create-sail-app
 bash create-sail-app
 ```
-
-or
-```
-bash create-sail-app/create-sail-app
-```
