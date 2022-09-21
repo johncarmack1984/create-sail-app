@@ -1,9 +1,10 @@
+#!/bin/bash -i
+
+shopt -s expand_aliases
+
+alias sail='[ -f sail ] && bash sail || bash vendor/bin/sail'
 (
-    shopt -s expand_aliases
-
     this="create-sail-app"
-
-    alias sail='[ -f sail ] && bash sail || bash vendor/bin/sail'
 
     read -p 'Project name: (default: "new-project-#") ' projectname
 
@@ -13,21 +14,25 @@
             projectname="new-project-0"
     fi
 
-    # install laravel
     cd ..
     while [ -d "$projectname" ]
         do
             size=${#projectname}
             count=$((${projectname:(-1)} + 1))
             projectname="${projectname:0:($size-1)}${count}"
-    done    
+    done
+    echo "Creating ${projectname} at "
     pwd
-    echo $projectname    
+    # install laravel & sail
     # currently unused sail packages: memcached,minio
     curl -s "https://laravel.build/${projectname}?with=pgsql,redis,meilisearch,selenium,mailhog" | bash
 
     # set up environment
-    cd ../$projectname
+    cd $projectname
+
+    echo "launching environment at"
+    pwd
+
     sail up -d
 
     # install jetstream
