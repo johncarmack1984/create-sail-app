@@ -18,63 +18,66 @@ fi
 
 # install laravel
 (
+    cd ..
     # currently unused sail packages: memcached,minio
     curl -s "https://laravel.build/${projectname}?with=pgsql,redis,meilisearch,selenium,mailhog" | bash
 )
 
 # copy config files
-cp ./.config/.eslintignore ./$projectname
-cp ./.config/.eslintrc.js ./$projectname
-cp ./.config/.zshrc ./$projectname
+cp ./.config/.eslintignore ../$projectname
+cp ./.config/.eslintrc.js ../$projectname
+cp ./.config/.zshrc ../$projectname
 
-# set up environment
-cd ./$projectname
-sail up -d
-
-
-# install jetstream
-sail composer require laravel/jetstream
-sail artisan jetstream:install inertia --ssr
-
-# database tools
-sail composer require doctrine/dbal
-sail composer require jzonta/faker-restaurant
-
-# user permissions
-sail composer require spatie/laravel-permission
-
-sail composer install
+(
+    # set up environment
+    cd ./$projectname
+    sail up -d
 
 
-# prepare frontend
-sail npm install
-sail npm install -D vitest
-sail npm install @vueuse/core
-sail npm install eslint
-sail npm install eslint-config-google
-sail npm install eslint-plugin-editorconfig
-sail npm install eslint-plugin-tailwindcss
-sail npm install eslint-plugin-vue
-sail npm install eslint-plugin-yml
-sail npm run build
+    # install jetstream
+    sail composer require laravel/jetstream
+    sail artisan jetstream:install inertia --ssr
 
-# rebuild container
-sail build
+    # database tools
+    sail composer require doctrine/dbal
+    sail composer require jzonta/faker-restaurant
 
-# database migrations
-sail artisan migrate
+    # user permissions
+    sail composer require spatie/laravel-permission
 
-# laravel services
-sail artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
+    sail composer install
 
-# copy Hello World
-cp ../.js/Components/Welcome.vue ./resources/js/Components/
-cp ../.js/Pages/Welcome.vue ./resources/js/Pages/
 
-code ./
-code ./resources/js/Components/Welcome.vue
+    # prepare frontend
+    sail npm install
+    sail npm install -D vitest
+    sail npm install @vueuse/core
+    sail npm install eslint
+    sail npm install eslint-config-google
+    sail npm install eslint-plugin-editorconfig
+    sail npm install eslint-plugin-tailwindcss
+    sail npm install eslint-plugin-vue
+    sail npm install eslint-plugin-yml
+    sail npm run build
 
-open http://${projectname}.test
+    # rebuild container
+    sail build
 
-# serve frontend
-sail npm run dev
+    # database migrations
+    sail artisan migrate
+
+    # laravel services
+    sail artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
+
+    # copy Hello World
+    cp ../.js/Components/Welcome.vue ../resources/js/Components/
+    cp ../.js/Pages/Welcome.vue ../resources/js/Pages/
+
+    code ./
+    code ./resources/js/Components/Welcome.vue
+
+    open http://${projectname}.test
+
+    # serve frontend
+    sail npm run dev
+)
