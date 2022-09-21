@@ -1,0 +1,9 @@
+/node_modules/
+/vendor/
+/**/resources/js/ziggy.js
+node_modules/
+vendor/
+resources/js/ziggy.js
+**/node_modules/
+**/vendor/
+**/resources/js/ziggy.js
