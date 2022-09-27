@@ -6,7 +6,12 @@ alias sail='[ -f sail ] && bash sail || bash vendor/bin/sail'
 (
     this="create-sail-app"
 
-    read -p 'Project name: (default: "new-project-#") ' projectname
+    if [ -z "$1" ]
+        then
+            read -p 'Project name: (default: "new-project-#") ' projectname
+        else
+            projectname=$1
+    fi
 
     # handle empty input
     if [ -z "$projectname" ]
@@ -23,9 +28,29 @@ alias sail='[ -f sail ] && bash sail || bash vendor/bin/sail'
     done
     echo "Creating ${projectname} at "
     pwd
+
+
+    #Open Docker, only if is not running
+    if (! docker stats --no-stream ); then
+        # On Mac OS this would be the terminal command to launch Docker
+        open /Applications/Docker.app
+        #Wait until Docker daemon is running and has completed initialisation
+        while (! docker stats --no-stream ); do
+            # Docker takes a few seconds to initialize
+            echo "Waiting for Docker Daemon to launch... (this can take a minute)"
+            sleep 9
+        done
+    fi  
+
+    echo "Docker running!"
+
     # install laravel & sail
     # currently unused sail packages: memcached,minio
-    curl -s "https://laravel.build/${projectname}?with=pgsql,redis,meilisearch,selenium,mailhog" | bash
+    if open -a Docker ; then
+        curl -s "https://laravel.build/${projectname}?with=pgsql,redis,meilisearch,selenium,mailhog" | bash
+    else
+        exit "Docker did not open; please open Docker Desktop and try again."
+    fi
 
     # set up environment
     cd $projectname
