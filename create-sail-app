@@ -76,13 +76,9 @@ alias sail='[ -f sail ] && bash sail || bash vendor/bin/sail'
     # prepare frontend
     sail npm install
     sail npm install -D vitest
-    sail npm install @vueuse/core
-    sail npm install eslint
-    sail npm install eslint-config-google
-    sail npm install eslint-plugin-editorconfig
-    sail npm install eslint-plugin-tailwindcss
-    sail npm install eslint-plugin-vue
-    sail npm install eslint-plugin-yml
+    sail npm install @vueuse/core eslint eslint-config-google \
+        eslint-plugin-editorconfig eslint-plugin-tailwindcss \
+        eslint-plugin-vue eslint-plugin-yml
     sail npm run build
 
     # rebuild container
